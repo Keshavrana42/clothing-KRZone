@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Clothing Brand | Premium Apparel for All</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    /* Add specific cart section styles here, or integrate into style.css */
+    #cart-section {
+        background-color: #f8f8f8;
+        padding: 60px 20px;
+        text-align: center;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    #cart-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 40px;
+        color: #000;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+    #cart-section h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background-color: #007bff;
+        border-radius: 2px;
+    }
+
+    .cart-items-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        padding: 20px;
+    }
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+        justify-content: space-between;
+        flex-wrap: wrap; /* Allow items to wrap */
+    }
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+
+    .cart-item img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .cart-item-details {
+        flex-grow: 1;
+        text-align: left;
+    }
+    .cart-item-details h4 {
+        margin: 0 0 5px;
+        font-size: 1.1em;
+        color: #333;
+    }
+    .cart-item-details p {
+        margin: 0;
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .cart-quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 10px;
+    }
+    .cart-quantity-controls button {
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.2s;
+    }
+    .cart-quantity-controls button:hover {
+        background: #e0e0e0;
+    }
+    .cart-quantity-controls span {
+        padding: 0 8px;
+        font-weight: bold;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .cart-item-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        margin-left: auto; /* Push to the right */
+    }
+
+    .cart-item-subtotal {
+        font-weight: bold;
+        font-size: 1.1em;
+        color: #000;
+        white-space: nowrap; /* Prevent wrapping */
+    }
+
+    .remove-from-cart-button {
+        background: #dc3545; /* Red color */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background 0.2s;
+    }
+    .remove-from-cart-button:hover {
+        background: #c82333;
+    }
+
+    .cart-summary-total {
+        text-align: right;
+        font-size: 1.6em;
+        font-weight: bold;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 2px solid #007bff;
+        color: #007bff;
+    }
+
+    .cart-actions {
+        text-align: center;
+        margin-top: 30px;
+    }
+    .cart-actions .proceed-button {
+        padding: 15px 30px;
+        background: #28a745; /* Green for checkout */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: background 0.3s, transform 0.2s;
+        text-decoration: none; /* For anchor tag */
+        display: inline-block; /* To apply padding correctly */
+    }
+    .cart-actions .proceed-button:hover {
+        background: #218838;
+        transform: translateY(-2px);
+    }
+
+    .empty-cart-message {
+        padding: 30px;
+        font-size: 1.2em;
+        color: #777;
+    }
+
+    .welcome-message {
+        color: #fff;
+        font-weight: bold;
+        padding: 8px 15px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .cart-item {
+            justify-content: center; /* Center items on small screens */
+        }
+        .cart-item-details, .cart-item-actions {
+            flex-basis: 100%; /* Take full width on small screens */
+            align-items: center; /* Center actions */
+            text-align: center;
+        }
+        .cart-item-actions {
+            margin-left: 0; /* Remove auto margin on small screens */
+        }
+        .cart-quantity-controls {
+            justify-content: center;
+        }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>KRZone</h1>
+    <p>Premium Clothing for the Modern Lifestyle</p>
+  </header>
+
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#shop">Shop All</a>
+    <a href="#cart-section" id="cart-nav-link">Cart (<span id="cart-count">0</span>)</a>
+    <a href="#mens">Men's</a>
+    <a href="#womens">Women's</a>
+    <a href="#boys">Boys</a>
+    <a href="#girls">Girls</a>
+    <a href="#kids">Kids</a>
+    <a href="#about">About Us</a>
+    <a href="#contact">Contact Us</a>
+    <div class="search-container">
+        <input type="text" id="product-search" placeholder="Search products..." onkeyup="searchProducts()">
+        <button onclick="searchProducts()">Search</button>
+    </div>
+    <div id="auth-links-container">
+        <a href="./login.html">Login</a>
+        <a href="./register.html">Register</a>
+    </div>
+  </nav>
+
+  <section class="hero" id="home">
+    <video autoplay loop muted playsinline class="hero-video">
+        <source src="./video/WhatsApp Video 2025-05-23 at 3.21.38 PM.mp4" type="video/mp4">
+    </video>
+    <div class="hero-content">
+      <h1>New Collection 2025</h1>
+      <p>Discover our latest designs for every lifestyle</p>
+      <button onclick="scrollToSection('shop')" class="hero-button">
+        Shop Now
+      </button>
+    </div>
+  </section>
+
+  <section class="products" id="shop">
+    <h2>Featured Products(Premium)</h2>
+    <div class="product-grid">
+      <div class="product-card" data-product-id="prod001">
+        <div class="product-description-top">
+          <p>Vintage green denim with classic Dry Goods branding—rugged charm meets timeless Americana style.</p>
+        </div>
+        <img src="./green shirt.jpeg" alt="Men's T-Shirt - back View">
+        <div class="product-info">
+          <h3>Vintage Green Denim Shirt– Classic Style, Timeless Quality </h3>
+          <p class="product-price">₹499</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="product-card" data-product-id="prod002">
+        <div class="product-description-top">
+          <p>Soft grey denim shirt, understated and versatile, blending heritage workwear with everyday ease</p>
+        </div>
+        <img src="./grey shirt.jpeg" alt="Shirt">
+        <div class="product-info">
+          <h3>Grey Denim Shirt – Understated Elegance, Heritage Craftsmanship</h3>
+          <p class="product-price">₹1299</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="product-card" data-product-id="prod003">
+        <div class="product-description-top">
+          <p>Sharp black formal shirt—where precision meets sophistication.</p>
+        </div>
+        <img src="./black format shirt.jpeg" alt="Formal shirt">
+        <div class="product-info">
+          <h3>Black Formal Shirt – Sleek Sophistication for Every Occasion</h3>
+          <p class="product-price">₹349</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="product-card" data-product-id="prod004">
+        <div class="product-description-top">
+          <p>Train harder, recover faster—black performance tee for relentless workouts</p>
+        </div>
+        <img src="black gym shirt.jpeg"alt="black gym t shirt">
+        <div class="product-info">
+          <h3>Black Gym T-Shirt (Half Sleeve) – Train Hard, Stay Comfortable</h3>
+          <p class="product-price">₹299</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="products category-section" id="mens">
+    <h2>Men's Collection</h2>
+    <div class="product-grid">
+      <div class="product-card" data-product-id="prod005">
+        <div class="product-description-top">
+          <p>Urbano Fashion Men's Loose Mid Rise Jeans</p>
+        </div>
+        <img src="./Screenshot 2025-05-23 135137.png" alt="Men's Slim Fit Denim Jeans">
+        <div class="product-info">
+          <h3>Slim Fit Denim Jeans</h3>
+          <p class="product-price">₹1499</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-product-id="prod006">
+        <div class="product-description-top">
+          <p>Men's Striped Polo T-Shirt | Premium Pique Cotton | Regular Fit | Smart Casual Wear</p>
+        </div>
+        <img src="./new.png" alt="Men's Striped Polo T-Shirt">
+        <div class="product-info">
+          <h3>The Indian Garage Co Men Slim Fit Striped Polo Collar Tshirt</h3>
+          <p class="product-price">₹799</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-product-id="prod007">
+        <div class="product-description-top">
+          <p>NINQ Mens 2 Pack Polyester Yoga Short Men Summer Running Gym Sports Shorts with Pockets Shorts for Men</p>
+        </div>
+        <img src="./shorts.png" alt="Men's Athletic Shorts">
+        <div class="product-info">
+          <h3>Athletic Shorts</h3>
+          <p class="product-price">₹599</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="products category-section" id="womens">
+    <h2>Women's Collection</h2>
+    <div class="product-grid">
+      <div class="product-card" data-product-id="prod008">
+        <div class="product-description-top">
+          <p>Women's High-Waist Skinny Jeans | Stretchy Denim | Comfortable & Flattering Fit | Everyday Essential</p>
+        </div>
+        <img src="./High-Waist Skinny Jeans.png" alt="Women's High-Waist Skinny Jeans">
+        <div class="product-info">
+          <h3>High-Waist Skinny Jeans</h3>
+          <p class="product-price">₹1399</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-product-id="prod009">
+        <div class="product-description-top">
+          <p>Women's Bohemian Maxi Skirt | Flowy Rayon Fabric | Elastic Waist | Perfect for Summer & Beach</p>
+        </div>
+        <img src="./Bohemian Maxi Skirt.png" alt="Women's Bohemian Maxi Skirt">
+        <div class="product-info">
+          <h3>Bohemian Maxi Skirt</h3>
+          <p class="product-price">₹899</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-product-id="prod010">
+        <div class="product-description-top">
+          <p>Women's V-Neck Knit Cardigan | Soft Acrylic Blend | Button-Up Closure | Versatile Layering Piece</p>
+        </div>
+        <img src="./V-Neck Knit Cardigan.png" alt="Women's V-Neck Knit Cardigan">
+        <div class="product-info">
+          <h3>V-Neck Knit Cardigan</h3>
+          <p class="product-price">₹999</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="products category-section" id="boys">
+    <h2>Boys' Collection</h2>
+    <div class="product-grid">
+      <div class="product-card" data-product-id="prod011">
+        <div class="product-description-top">
+          <p>Lymio Track Pant for Men || Track Pants || Plain Track Pant (TP 09-12)</p>
+        </div>
+        <img src="./jogger.png" alt="Boys' Playtime Jogger Pants">
+        <div class="product-info">
+          <h3>Playtime Jogger Pants</h3>
+          <p class="product-price">₹649</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-product-id="prod012">
+        <div class="product-description-top">
+          <p>THE PRINT PLATTER Venom Lilac Cotton Hoodie Bio Wash | Comic Superhero 330gsm Sweatshirt with Hood for Winter |H2</p>
+        </div>
+        <img src="./hoodie.png" alt="Boys' Superhero Hoodie">
+        <div class="product-info">
+          <h3>Superhero Hoodie</h3>
+          <p class="product-price">₹799</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="products category-section" id="girls">
+    <h2>Girls' Collection</h2>
+    <div class="product-grid">
+      <div class="product-card" data-product-id="prod013">
+        <div class="product-description-top">
+          <p>PATPAT� Mermaid Dress for Girls - Little Mermaid Costume for Girls with Matching Jewelry & Hair Clip Mermaid Dress Princess Dresses for Girls 4-6 Years Old Gift Birthday Party</p>
+        </div>
+        <img src="./1.png" alt="Girls' Princess Party Dress">
+        <div class="product-info">
+          <h3>Princess Party Dress</h3>
+          <p class="product-price">₹1199</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-product-id="prod014">
+        <div class="product-description-top">
+          <p>SAFFE Women's Casual Evening Tank Top Glittery Textured Sleeveless Round Neck Regular Fit, Maroon/Wine</p>
+        </div>
+        <img src="./2.png" alt="Girls' Glittery T-Shirt">
+        <div class="product-info">
+          <h3>Glittery T-Shirt</h3>
+          <p class="product-price">₹399</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="products category-section" id="kids">
+    <h2>Kids' General Apparel</h2>
+    <div class="product-grid">
+      <div class="product-card" data-product-id="prod015">
+        <div class="product-description-top">
+          <p>Unisex Kids' Animal Print Onesie | Soft Fleece | Zipper Closure | Cozy Sleepwear & Loungewear</p>
+        </div>
+        <img src="kid.png" alt="Unisex Kids' Animal Print Onesie">
+        <div class="product-info">
+          <h3>Animal Print Onesie</h3>
+          <p class="product-price">₹849</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-product-id="prod016">
+        <div class="product-description-top">
+          <p>Kids' Rain Protection Jacket | Waterproof Material | Hooded Design | Perfect for Rainy Days</p>
+        </div>
+        <img src="./rain.png" alt="Kids' Rain Protection Jacket">
+        <div class="product-info">
+          <h3>Rain Protection Jacket</h3>
+          <p class="product-price">₹999</p>
+          <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cart-section" class="products category-section">
+    <h2>Your Shopping Cart</h2>
+    <div class="cart-items-container">
+        <div id="cart-items-display">
+            <p class="empty-cart-message">Your cart is empty. Start shopping!</p>
+        </div>
+        <div class="cart-summary-total">
+            Total: <span id="cart-total-price">₹0.00</span>
+        </div>
+        <div class="cart-actions">
+            <a href="checkout.html" class="proceed-button" id="proceed-to-checkout-button">Proceed to Checkout</a>
+        </div>
+    </div>
+  </section>
+
+  <section class="about-us" id="about">
+    <h2>Our Story</h2>
+    <p>
+      At **KRZone**, we believe in timeless style and uncompromising quality.
+      Born from a passion for premium fabrics and modern design, our journey began in [2025] with a vision
+      to create apparel that not only looks good but feels incredible. We meticulously source
+      materials and work with skilled artisans to bring you pieces that are built to last and designed to empower.
+    </p>
+    <h3>Our Mission</h3>
+    <p>
+      To inspire confidence and comfort through thoughtfully designed, high-quality clothing
+      that seamlessly integrates into your everyday life. We are committed to sustainable practices
+      and ethical production, ensuring that every garment you wear tells a story of craftsmanship and care.
+    </p>
+  </section>
+
+  <section class="contact-us" id="contact">
+    <h2>Get in Touch</h2>
+    <p>
+      Have questions or need assistance? We're here to help!
+    </p>
+    <p>Email: <a href="mailto:keshavrana5353@gmail.com">keshavrana5353@gmail.com</a></p>
+    <p>Phone: <a href="tel:+91 600XXXXXXX">+91 600XXXXXXX</a></p>
+    <div>
+      <p>Or fill out our contact form:</p>
+      <form>
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea placeholder="Your Message" rows="5"></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 KRZone Clothing Brand. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Search functionality
+    function searchProducts() {
+      const searchTerm = document.getElementById('product-search').value.toLowerCase();
+      const productCards = document.querySelectorAll('.product-card');
+
+      productCards.forEach(card => {
+        const title = card.querySelector('.product-info h3').textContent.toLowerCase();
+        const descriptionElement = card.querySelector('.product-description-top p');
+        const description = descriptionElement ? descriptionElement.textContent.toLowerCase() : '';
+
+        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+          card.style.display = 'block'; // Or 'flex' if it's a flex item
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Scroll to section function
+    function scrollToSection(id) {
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Cart functionality (simplified for this example, usually more complex with localStorage)
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+    function updateCartDisplay() {
+        const cartItemsDisplay = document.getElementById('cart-items-display');
+        const cartCountElement = document.getElementById('cart-count');
+        const cartTotalPriceElement = document.getElementById('cart-total-price');
+        const proceedToCheckoutButton = document.getElementById('proceed-to-checkout-button');
+
+        cartItemsDisplay.innerHTML = ''; // Clear existing items
+
+        if (cartItems.length === 0) {
+            cartItemsDisplay.innerHTML = '<p class="empty-cart-message">Your cart is empty. Start shopping!</p>';
+            proceedToCheckoutButton.style.display = 'none';
+        } else {
+            let totalQuantity = 0;
+            let totalPrice = 0;
+
+            cartItems.forEach(item => {
+                totalQuantity += item.quantity;
+                totalPrice += item.price * item.quantity;
+
+                const cartItemDiv = document.createElement('div');
+                cartItemDiv.classList.add('cart-item');
+                cartItemDiv.dataset.productId = item.id; // Add data-product-id to the cart item div
+
+                cartItemDiv.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="cart-item-details">
+                        <h4>${item.name}</h4>
+                        <p>Price: ₹${item.price.toFixed(2)}</p>
+                        <div class="cart-quantity-controls">
+                            <button onclick="changeQuantity('${item.id}', -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="changeQuantity('${item.id}', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <span class="cart-item-subtotal">₹${(item.price * item.quantity).toFixed(2)}</span>
+                        <button class="remove-from-cart-button" onclick="removeFromCart('${item.id}')">Remove</button>
+                    </div>
+                `;
+                cartItemsDisplay.appendChild(cartItemDiv);
+            });
+            proceedToCheckoutButton.style.display = 'inline-block'; // Show button if cart is not empty
+
+            cartCountElement.textContent = totalQuantity;
+            cartTotalPriceElement.textContent = `₹${totalPrice.toFixed(2)}`;
+        }
+        localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Save cart to localStorage
+    }
+
+    function addToCart(button) {
+        const productCard = button.closest('.product-card');
+        const productId = productCard.dataset.productId;
+        const productName = productCard.querySelector('.product-info h3').textContent;
+        const productPrice = parseFloat(productCard.querySelector('.product-info .product-price').textContent.replace('₹', ''));
+        const productImage = productCard.querySelector('img').src;
+
+        const existingItemIndex = cartItems.findIndex(item => item.id === productId);
+
+        if (existingItemIndex > -1) {
+            cartItems[existingItemIndex].quantity += 1;
+        } else {
+            cartItems.push({
+                id: productId,
+                name: productName,
+                price: productPrice,
+                image: productImage,
+                quantity: 1
+            });
+        }
+        updateCartDisplay();
+        alert(`${productName} added to cart!`); // Simple feedback
+    }
+
+    function changeQuantity(productId, change) {
+        const itemIndex = cartItems.findIndex(item => item.id === productId);
+        if (itemIndex > -1) {
+            cartItems[itemIndex].quantity += change;
+            if (cartItems[itemIndex].quantity <= 0) {
+                cartItems.splice(itemIndex, 1); // Remove if quantity is 0 or less
+            }
+        }
+        updateCartDisplay();
+    }
+
+    function removeFromCart(productId) {
+        cartItems = cartItems.filter(item => item.id !== productId);
+        updateCartDisplay();
+    }
+
+    // Initial display of cart when page loads
+    document.addEventListener('DOMContentLoaded', updateCartDisplay);
+  </script>
+</body>
+</html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRZone | Checkout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css"> <style>
+        /* Specific styles for checkout page */
+        body {
+            background-color: #f0f2f5; /* A softer background for the entire page */
+        }
+
+        .checkout-container {
+            max-width: 850px; /* Slightly wider container */
+            margin: 80px auto 50px; /* Adjust top margin to clear fixed nav */
+            padding: 40px 50px; /* More horizontal padding */
+            background-color: #ffffff;
+            border-radius: 15px; /* More rounded corners */
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1); /* Deeper shadow */
+            text-align: left;
+        }
+
+        .checkout-container h2 {
+            font-size: 3rem; /* Larger main heading */
+            margin-bottom: 40px;
+            color: #222; /* Darker text */
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+            letter-spacing: -0.5px; /* Slight letter spacing adjustment */
+        }
+        .checkout-container h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px; /* Even wider underline */
+            height: 6px; /* Thicker underline */
+            background-color: #007bff; /* Primary brand color */
+            border-radius: 3px;
+        }
+
+        /* Styling for section headers within checkout */
+        .checkout-summary h3,
+        .checkout-details h3 {
+            font-size: 2.2rem; /* Larger subheadings */
+            margin-top: 50px; /* More space above new section heading */
+            margin-bottom: 30px;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0; /* Softer underline */
+            padding-bottom: 12px;
+            text-align: center; /* Center these subheadings too */
+        }
+        .checkout-details h3 {
+            margin-top: 60px; /* More space above the form section */
+        }
+
+
+        .checkout-summary {
+            margin-bottom: 50px;
+            padding: 20px 0; /* Add vertical padding for summary section */
+            border-bottom: 1px dashed #e0e0e0; /* A clear visual separation */
+        }
+
+        #checkout-items {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 30px; /* More padding */
+            margin-bottom: 30px;
+            background-color: #fcfcfc;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* More subtle inner shadow for depth */
+        }
+
+        .checkout-item {
+            display: flex;
+            align-items: center;
+            gap: 25px; /* Increased gap */
+            padding: 18px 0;
+            border-bottom: 1px dashed #e9e9e9;
+            transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out; /* Smooth hover */
+        }
+        .checkout-item:hover {
+            background-color: #f7f7f7;
+            transform: translateX(5px); /* Slight slide effect on hover */
+        }
+        .checkout-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .checkout-item img {
+            width: 80px; /* Larger image */
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px; /* More rounded image corners */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* More prominent image shadow */
+        }
+        .checkout-item-details {
+            flex-grow: 1;
+            display: flex; /* Use flexbox for item details */
+            flex-direction: column;
+            gap: 5px; /* Space between name, desc, qty */
+        }
+        .checkout-item-details p {
+            margin: 0;
+            font-size: 1.05em; /* Slightly larger text */
+            color: #555;
+            line-height: 1.4;
+        }
+        .checkout-item-details p:first-child {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.15em;
+        }
+        .checkout-item-price {
+            font-weight: bold;
+            color: #000;
+            font-size: 1.25em; /* More prominent price */
+            white-space: nowrap; /* Prevent price from wrapping */
+        }
+        .checkout-item-quantity {
+            font-size: 0.95em;
+            color: #777;
+        }
+
+        .checkout-total {
+            text-align: right;
+            font-size: 2em; /* Even larger total price */
+            font-weight: bold;
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 4px solid #007bff; /* Thicker top border */
+            color: #007bff;
+            letter-spacing: 0.5px;
+        }
+
+        .checkout-form {
+            display: grid;
+            gap: 25px; /* Increased gap between form groups */
+            grid-template-columns: 1fr;
+        }
+
+        /* Styling for the new form-group wrappers */
+        .form-group {
+            background-color: #f8f8f8; /* Light background for each box */
+            padding: 20px 25px; /* Padding inside each box */
+            border-radius: 10px; /* Rounded corners for the boxes */
+            border: 1px solid #eee; /* Light border for each box */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03); /* Subtle shadow for each box */
+            transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+        }
+        .form-group:focus-within { /* Highlight form-group when an input inside is focused */
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.15);
+            border-color: #007bff;
+        }
+
+
+        .checkout-form label {
+            font-weight: bold;
+            margin-bottom: 8px; /* More space between label and input */
+            display: block;
+            color: #333;
+            font-size: 1.1em; /* Slightly larger label text */
+        }
+
+        .checkout-form input,
+        .checkout-form textarea,
+        .checkout-form select {
+            width: 100%;
+            padding: 15px; /* More padding for inputs */
+            border: 1px solid #ddd; /* Softer border */
+            border-radius: 8px; /* More rounded inputs */
+            font-size: 1.05em;
+            transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+            background-color: #fff; /* Ensure white background for inputs */
+        }
+
+        .checkout-form input:focus,
+        .checkout-form textarea:focus,
+        .checkout-form select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2); /* Softer glowing effect */
+            outline: none;
+        }
+
+        /* Specific styles for address fields to stack without extra gap */
+        .address-group input {
+            margin-bottom: 18px; /* Adds space between address inputs */
+        }
+        .address-group input:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .checkout-form button {
+            background: linear-gradient(to right, #28a745, #218838); /* Gradient background */
+            color: #fff;
+            border: none;
+            padding: 20px 40px; /* Even larger button */
+            border-radius: 10px; /* More rounded button */
+            cursor: pointer;
+            font-size: 1.4rem; /* Larger font */
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            width: 100%;
+            margin-top: 40px; /* More space above button */
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4); /* More prominent button shadow */
+            letter-spacing: 0.5px;
+        }
+
+        .checkout-form button:hover {
+            background: linear-gradient(to right, #218838, #1e7e34); /* Darker gradient on hover */
+            transform: translateY(-5px); /* More pronounced lift */
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.5);
+        }
+
+        /* NEW: Order Success Message Styles */
+        #order-success-message {
+            display: none; /* Hidden by default */
+            max-width: 700px;
+            margin: 100px auto 50px;
+            padding: 50px;
+            background-color: #e6ffe6; /* Light green background */
+            border: 2px solid #28a745; /* Green border */
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,128,0,0.2);
+            animation: fadeIn 0.8s ease-out; /* Fade-in animation */
+        }
+
+        #order-success-message h2 {
+            color: #28a745; /* Green heading */
+            font-size: 3.2rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        #order-success-message h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: #28a745;
+            border-radius: 2px;
+        }
+
+        #order-success-message p {
+            font-size: 1.3rem;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        #order-success-message strong {
+            color: #007bff; /* Highlight email/phone */
+            font-weight: bold;
+        }
+
+        #order-success-message .back-to-shop-button {
+            padding: 15px 30px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: background 0.3s, transform 0.2s;
+            text-decoration: none; /* For the anchor tag button */
+            display: inline-block; /* Make it behave like a block element for padding */
+        }
+        #order-success-message .back-to-shop-button:hover {
+            background: #0056b3;
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive for checkout page */
+        @media (max-width: 768px) {
+            .checkout-container {
+                margin: 60px auto 30px;
+                padding: 25px;
+            }
+            .checkout-container h2 {
+                font-size: 2.5rem;
+                margin-bottom: 30px;
+                padding-bottom: 10px;
+            }
+            .checkout-container h2::after {
+                width: 120px;
+                height: 5px;
+            }
+            .checkout-summary h3,
+            .checkout-details h3 {
+                font-size: 1.8rem;
+                margin-top: 40px;
+                margin-bottom: 25px;
+            }
+            #checkout-items {
+                padding: 20px;
+            }
+            .checkout-item {
+                gap: 15px;
+                padding: 12px 0;
+                flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            }
+            .checkout-item img {
+                width: 60px;
+                height: 60px;
+            }
+            .checkout-item-details {
+                flex-basis: 100%; /* Take full width on small screens */
+            }
+            .checkout-item-price {
+                flex-basis: 100%; /* Make price take full width */
+                text-align: right;
+            }
+            .checkout-total {
+                font-size: 1.6em;
+                margin-top: 25px;
+                padding-top: 18px;
+            }
+            .form-group {
+                padding: 15px 20px;
+                border-radius: 8px;
+            }
+            .checkout-form input,
+            .checkout-form textarea,
+            .checkout-form select {
+                padding: 12px;
+                font-size: 1em;
+            }
+            .checkout-form button {
+                font-size: 1.2rem;
+                padding: 16px 30px;
+                margin-top: 30px;
+                border-radius: 8px;
+            }
+            #order-success-message {
+                margin: 80px auto 40px;
+                padding: 30px;
+            }
+            #order-success-message h2 {
+                font-size: 2.5rem;
+            }
+            #order-success-message p {
+                font-size: 1.1rem;
+            }
+            #order-success-message .back-to-shop-button {
+                font-size: 1rem;
+                padding: 12px 25px;
+            }
+        }
+        @media (max-width: 480px) {
+            .checkout-container {
+                margin: 40px auto 20px;
+                padding: 15px;
+                border-radius: 10px;
+            }
+            .checkout-container h2 {
+                font-size: 2rem;
+                margin-bottom: 25px;
+                padding-bottom: 8px;
+            }
+            .checkout-container h2::after {
+                width: 80px;
+                height: 4px;
+            }
+            .checkout-summary h3,
+            .checkout-details h3 {
+                font-size: 1.5rem;
+                margin-top: 25px;
+                margin-bottom: 15px;
+            }
+            #checkout-items {
+                padding: 15px;
+                border-radius: 10px;
+            }
+            .checkout-item {
+                gap: 10px;
+                padding: 10px 0;
+            }
+            .checkout-item img {
+                width: 50px;
+                height: 50px;
+            }
+            .checkout-item-details p {
+                font-size: 0.9em;
+            }
+            .checkout-item-price {
+                font-size: 1em;
+            }
+            .checkout-total {
+                font-size: 1.4em;
+                margin-top: 20px;
+                padding-top: 15px;
+            }
+            .form-group {
+                padding: 12px 15px;
+                border-radius: 8px;
+            }
+            .checkout-form input,
+            .checkout-form textarea,
+            .checkout-form select {
+                padding: 10px;
+                font-size: 0.95em;
+            }
+            .checkout-form button {
+                font-size: 1.1rem;
+                padding: 14px 25px;
+                margin-top: 25px;
+                border-radius: 8px;
+            }
+            #order-success-message {
+                margin: 60px auto 30px;
+                padding: 20px;
+                border-radius: 10px;
+            }
+            #order-success-message h2 {
+                font-size: 2rem;
+                margin-bottom: 15px;
+            }
+            #order-success-message p {
+                font-size: 0.95rem;
+                margin-bottom: 15px;
+            }
+            #order-success-message .back-to-shop-button {
+                font-size: 0.9rem;
+                padding: 10px 20px;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>KRZone</h1>
+        <p>Premium Clothing for the Modern Lifestyle</p>
+    </header>
+
+    <nav>
+        <a href="index.html#home">Home</a>
+        <a href="index.html#shop">Shop All</a>
+        <a href="index.html#cart-section" id="cart-nav-link">Cart (<span id="cart-count">0</span>)</a>
+        </nav>
+
+    <div class="checkout-container" id="checkout-form-section">
+        <h2>Complete Your Order</h2>
+
+        <div class="checkout-summary">
+            <h3>Order Summary</h3>
+            <div id="checkout-items">
+                <p>No items in cart.</p>
+            </div>
+            <div class="checkout-total">
+                Total: <span id="checkout-total-price">₹0</span>
+            </div>
+        </div>
+
+        <div class="checkout-details">
+            <h3>Shipping & Payment Information</h3>
+            <form id="checkout-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name:</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNumber">Mobile Number:</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" pattern="[0-9]{10}" placeholder="e.g., 9876543210" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Shipping Address:</label>
+                    <div class="address-group">
+                        <input type="text" id="address" name="address" placeholder="Street Address" required>
+                        <input type="text" id="city" name="city" placeholder="City" required>
+                        <input type="text" id="state" name="state" placeholder="State/Province" required>
+                        <input type="text" id="zipCode" name="zipCode" placeholder="Zip/Postal Code" required>
+                        <input type="text" id="country" name="country" placeholder="Country" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method:</label>
+                    <select id="paymentMethod" name="paymentMethod" required>
+                        <option value="">Select Payment Method</option>
+                        <option value="credit_card">Credit Card</option>
+                        <option value="upi">UPI</option>
+                        <option value="net_banking">Net Banking</option>
+                        <option value="cash_on_delivery">Cash on Delivery</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cardNumber">Card Number (if Credit Card selected):</label>
+                    <input type="text" id="cardNumber" name="cardNumber" pattern="[0-9]{13,16}" placeholder="XXXX XXXX XXXX XXXX">
+                </div>
+
+                <div class="form-group">
+                    <label for="expiryDate">Expiry Date:</label>
+                    <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY">
+                </div>
+
+                <div class="form-group">
+                    <label for="cvv">CVV:</label>
+                    <input type="text" id="cvv" name="cvv" pattern="[0-9]{3,4}" placeholder="XXX">
+                </div>
+
+                <button type="submit">Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="order-success-message">
+        <h2>Order Placed Successfully!</h2>
+        <p>Thank you for your purchase. Your order has been confirmed.</p>
+        <p>A detailed receipt has been sent to your registered email: <strong id="confirmed-email"></strong></p>
+        <p>You will receive SMS updates on your mobile number: <strong id="confirmed-phone"></strong></p>
+        <p>Your order will be delivered within 5-7 business days.</p>
+        <a href="index.html" class="back-to-shop-button">Continue Shopping</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 KRZone Clothing Brand. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const getCartItems = () => {
+                const cartItemsString = localStorage.getItem('cartItems');
+                try {
+                    return cartItemsString ? JSON.parse(cartItemsString) : [];
+                } catch (e) {
+                    console.error("Error parsing cart items from localStorage:", e);
+                    return [];
+                }
+            };
+
+            const cartItems = getCartItems();
+            const checkoutItemsContainer = document.getElementById('checkout-items');
+            const checkoutTotalPriceElement = document.getElementById('checkout-total-price');
+            let total = 0;
+
+            // Update cart count in nav on checkout page load
+            const cartCountElement = document.getElementById('cart-count');
+            if (cartCountElement) {
+                const totalItemsInCart = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                cartCountElement.textContent = totalItemsInCart;
+            }
+
+            if (cartItems.length === 0) {
+                checkoutItemsContainer.innerHTML = '<p>Your cart is empty. Please return to the <a href="index.html#shop">shop</a> to add items.</p>';
+            } else {
+                checkoutItemsContainer.innerHTML = ''; // Clear "No items" message
+                cartItems.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.classList.add('checkout-item');
+                    const itemSubtotal = item.price * item.quantity;
+                    total += itemSubtotal;
+
+                    itemElement.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="checkout-item-details">
+                            <p>${item.name}</p>
+                            <p>Description: ${item.description}</p>
+                            <p class="checkout-item-quantity">Quantity: ${item.quantity}</p>
+                        </div>
+                        <span class="checkout-item-price">₹${itemSubtotal.toFixed(2)}</span>
+                    `;
+                    checkoutItemsContainer.appendChild(itemElement);
+                });
+                checkoutTotalPriceElement.textContent = `₹${total.toFixed(2)}`;
+            }
+
+            // Get references to the form section and success message section
+            const checkoutFormSection = document.getElementById('checkout-form-section');
+            const orderSuccessMessage = document.getElementById('order-success-message');
+            const confirmedEmailElement = document.getElementById('confirmed-email');
+            const confirmedPhoneElement = document.getElementById('confirmed-phone');
+
+            // Checkout Form Submission
+            const checkoutForm = document.getElementById('checkout-form');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', (event) => {
+                    event.preventDefault(); // Prevent default form submission
+
+                    if (cartItems.length === 0) {
+                        alert("Your cart is empty. Please add items before placing an order.");
+                        window.location.href = 'index.html#shop'; // Redirect to shop
+                        return;
+                    }
+
+                    // In a real application, you would send this data to a server
+                    const formData = new FormData(checkoutForm);
+                    const orderDetails = {};
+                    for (let [key, value] of formData.entries()) {
+                        orderDetails[key] = value;
+                    }
+
+                    console.log("Order Details:", orderDetails);
+                    console.log("Items to purchase:", cartItems);
+
+                    // Get the entered email and phone number
+                    const enteredEmail = orderDetails['email'] || 'N/A';
+                    const enteredPhone = orderDetails['phoneNumber'] || 'N/A';
+
+                    // Update the success message content
+                    confirmedEmailElement.textContent = enteredEmail;
+                    confirmedPhoneElement.textContent = enteredPhone;
+
+                    // Hide the checkout form and show the success message
+                    checkoutFormSection.style.display = 'none';
+                    orderSuccessMessage.style.display = 'block';
+
+                    // Clear the cart from localStorage after successful order
+                    localStorage.removeItem('cartItems');
+
+                    // Optional: Scroll to the top of the success message
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
